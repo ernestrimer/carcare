@@ -2,11 +2,11 @@ class Api::VehiclesController < ApplicationController
     before_action :set_user
 
     def index
-        render json: @user.vehicles
+      render json: @user.vehicles
     end
 
     def show
-      render json: @user.vehicles 
+      render json: @user.vehicles = Vehicle.find(params[:id])
     end
 
     def create
@@ -28,11 +28,8 @@ class Api::VehiclesController < ApplicationController
       end
 
     def destroy
-        Vehicle.find(params[:id]).destroy
-        render json: { messsage: 'Vehicle deleted' }
-
-        @user.tasks.find(params[:id]).destroy
-        render json: { message: 'task is deleted'}
+        @user.vehicles.find(params[:id]).destroy
+        render json: { message: 'vehicle deleted'}
     end
 
   private

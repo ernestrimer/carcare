@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 2020_07_11_175321) do
 
   create_table "schedules", force: :cascade do |t|
     t.datetime "when"
+    t.string "vendor"
     t.bigint "service_id", null: false
     t.bigint "vehicle_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -27,8 +28,8 @@ ActiveRecord::Schema.define(version: 2020_07_11_175321) do
 
   create_table "services", force: :cascade do |t|
     t.string "task"
+    t.string "description"
     t.string "frequency"
-    t.string "vendor"
     t.bigint "vehicle_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
