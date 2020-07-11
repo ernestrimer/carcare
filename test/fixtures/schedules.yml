@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  when: 2020-07-11 11:53:21
+  service: one
+  vehicle: one
+
+two:
+  when: 2020-07-11 11:53:21
+  service: two
+  vehicle: two
