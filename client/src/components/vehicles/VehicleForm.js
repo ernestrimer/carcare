@@ -7,7 +7,7 @@ class VehicleForm extends React.Component {
   model: "", 
   year: "", 
   mileage: "", 
-  vehicleChoice: null,
+  serviceChoice: null,
     services: [],
     editServiceId: ''
 };
@@ -40,30 +40,30 @@ class VehicleForm extends React.Component {
       const { id } = this.props.vehicle;
       axios.get(`/api/vehciles/${id}/schedules`)
         .then(res => {
-          const scheduleVehicle = res.data[0]
-          this.setState({editScheduleId:scheduleVehicle.id }) 
+          const serviceVehicle = res.data[0]
+          this.setState({editServiceId:serviceVehicle.id }) 
       })
-      const { make, model, year, mileage, editScheduleId} = this.state;
-      this.props.editVehicle(id, {make: make, model: model, year: year, mileage: mileage }, editScheduleId);
+      const { make, model, year, mileage, editServiceId} = this.state;
+      this.props.editVehicle(id, {make: make, model: model, year: year, mileage: mileage }, editServiceId);
       this.props.toggleEdit();
     } else {
-      const{ make, model, year, mileage, scheduleChoice} =this.state 
-      this.props.add({ make:make, model:model, year:year, mileage:mileage },scheduleChoice);
+      const{ make, model, year, mileage, serviceChoice} =this.state 
+      this.props.add({ make:make, model:model, year:year, mileage:mileage },serviceChoice);
       this.props.toggleForm();
     }
   };
 // function that is going to list out all booze
-  addScheduleToVehicle = () => {
-    return this.state.schedule.map( (schedule) => (
-      <option value={schedule.id}>
-        {schedule.name}
+  addServiceToVehicle = () => {
+    return this.state.service.map( (service) => (
+      <option value={service.id}>
+        {service.name}
       </option>
 
     ))
   }
 
   render() {
-    const { make, model, year, mileage, vehicleChoice } = this.state;
+    const { make, model, year, mileage, serviceChoice } = this.state;
     return (
       <form onSubmit={this.handleSubmit}>
         <input
@@ -85,6 +85,12 @@ class VehicleForm extends React.Component {
           onChange={this.handleChange}
         />  
         {/* lists out all of the booze names */}
+        <input
+          placeholder="Mileage"
+          name="mileage"
+          value={mileage}
+          onChange={this.handleChange}
+        />
         <select 
           placeholder="Vehicle"
           // be a radio list where you can selected more then one booze
@@ -94,15 +100,9 @@ class VehicleForm extends React.Component {
           ><option> 
             services...
           </option>
-          {this.addBoozeToDrink()} 
+          {this.addServiceToVehicle()} 
         </select>
 
-        <input
-          placeholder="Mileage"
-          name="mileage"
-          value={mileage}
-          onChange={this.handleChange}
-        />
         <button>Submit</button>
       </form>
     );

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Vehicle from './Vehicles';
+import Vehicles from './Vehicles';
 
 const Vehicle = ({ make, model, year, mileage, deleteVehicle, id}) => {
   return (

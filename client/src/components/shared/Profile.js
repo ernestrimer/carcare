@@ -1,7 +1,8 @@
 import React, { Fragment, } from 'react';
 import { AuthConsumer, } from "../../providers/AuthProvider";
-import { Form, Grid, Image, Container, Divider, Header, Button, } from 'semantic-ui-react';
+import { Form, Grid, Image, Container, Divider, Header, Button, Modal} from 'semantic-ui-react';
 import Dropzone from 'react-dropzone'; //Import Dropzone
+import VehicleForm from '../vehicles/VehicleForm'
 
 //Copied from lecture notes
 
@@ -128,6 +129,7 @@ class Profile extends React.Component {
   render() {
     const { editing, } = this.state;
     return (
+      <>
       <Container>
         <Divider hidden />
         <Grid>
@@ -139,6 +141,15 @@ class Profile extends React.Component {
           </Grid.Row>
         </Grid>
       </Container>
+      {/* <div>
+        <Modal trigger={<Button>Add Vehicle</Button>} centered={false}>
+            <Modal.Header>New Vehicle</Modal.Header>
+            <Modal.Content>
+              <VehicleForm addVehicle={value.addVehicle} />
+            </Modal.Content>
+          </Modal>
+      </div> */}
+      </>
     )
   }
 }

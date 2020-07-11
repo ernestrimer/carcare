@@ -1,114 +1,82 @@
 import React from 'react';
-import Vehicle from './Vehicles';
-import axios from "axios";
+import axios from 'axios';
+import VehicleForm from './VehicleForm';
 
-class VehicleForm extends React.Component {
-  state = { name: "", 
-  history: "", 
-  ingredients: "", 
-  prep_serv: "", 
-  boozeChoice: null,
-    boozes: [],
-    editBoozeId: ''
-};
+
+class VehicleView extends React.Component {
+  state = { 
+   vehcile: {},
+   toggleEdit: false,
+   services: []
+  };
 
   componentDidMount() {
-    if (this.props.drink) {
-      const {  name, history, ingredients, prep_serv, id } = this.props.drink;
-      this.setState({ name: name, history: history, ingredients: ingredients, prep_serv: prep_serv});
-    }
-    // axios call to booze controller index method
-    // to grab all boozes, set them to booze array 
-    axios.get('/api/boozes')
-    .then((res) => {
-      this.setState({ boozes: res.data });
-    })
-    .catch(console.log("Party Foul"));
-
+    const { id } = this.props.match.params;
+    axios.get(`/api/vehicles/${id}`).then((res) => {
+      this.setState({ vehicle: res.data });
+    });
   }
 
-  handleChange = (e) => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  };
-
-  handleSubmit = (e) => {
-    
-    e.preventDefault();
-
-    if (this.props.drink) {
-      const { id } = this.props.drink;
-      axios.get(`/api/drinks/${id}/boozedrinks`)
-        .then(res => {
-          const boozeDrink = res.data[0]
-          this.setState({editBoozeId:boozeDrink.id }) 
+  editVehicle = (id, vehicle) => {
+    axios.put(`/api/vehicles/${id}`, vehicle)
+      .then(res => {
+      this.setState({vehicle: res.data})
+      this.updateServiceVehicle(id, vehicle.serviceChoice)
       })
-      const { name, history, ingredients, prep_serv, editBoozeId} = this.state;
-      this.props.editDrink(id, {name: name, history: history, ingredients: ingredients, prep_serv: prep_serv }, editBoozeId);
-      this.props.toggleEdit();
-    } else {
-      const{ name, history, ingredients, prep_serv, boozeChoice} =this.state 
-      this.props.add({ name:name, ingredients:ingredients, prep_serv:prep_serv, history:history},boozeChoice);
-      this.props.toggleForm();
-    }
   };
-// function that is going to list out all booze
-  addBoozeToDrink = () => {
-    return this.state.boozes.map( (booze) => (
-      <option value={booze.id}>
-        {booze.name}
-      </option>
 
-    ))
+  updateServiceVehicle = (vehicle_id, service_id) => {
+    debugger
+    axios.put(`/api/vehicles/`)
   }
 
+  // 
+
+  updateVehicle = (id) => {
+  axios.put(`/api/vehicles/${id}`)
+    .then( res => { 
+      const vehicles = this.state.vehicles.map( t => {
+        if(t.id === id)
+          return res.data;
+        return t;
+      });
+      this.setState({ vehicles, });
+    })
+  }
+
+  toggle = () => {
+    this.setState({ toggleEdit: !this.state.toggleEdit });
+  };
+
+  // deleteDrink = (id) => {
+  //   axios.delete(`/api/drinks/${id}`)
+  //     .then(res => {
+  //     this.setState({ drink: this.state.drink.filter(drink => drink.id !== id)})
+  //   })
+  //   return <Redirect to = {{ pathname: "/drinks" }} />;
+    
+  // }
 
   render() {
-    const { name, history, ingredients, prep_serv, boozeChoice } = this.state;
+    const { make, model, year, mileage} = this.state.vehicle;
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input
-          placeholder="Drink Name"
-          name="name"
-          value={name}
-          onChange={this.handleChange}
-        />
-        <input
-          placeholder="History"
-          name="history"
-          value={history}
-          onChange={this.handleChange}
-        />
-        <input
-          placeholder="Ingredients"
-          name="ingredients"
-          value={ingredients}
-          onChange={this.handleChange}
-        />  
-        {/* lists out all of the booze names */}
-        <select 
-          placeholder="Alcohol"
-          // be a radio list where you can selected more then one booze
-          name="boozeChoice" 
-          value={boozeChoice}
-          onChange={this.handleChange}
-          ><option> 
-            booze...
-          </option>
-          {this.addBoozeToDrink()}
-        </select>
-
-        <input
-          placeholder="Preparation"
-          name="prep_serv"
-          value={prep_serv}
-          onChange={this.handleChange}
-        />
-        <button>Submit</button>
-      </form>
+      <div>
+        <h1>{make}</h1>
+        <h1>{model}</h1>
+        <h1>{year}</h1>
+        <h1>{mileage}</h1>
+        
+        {this.state.toggleEdit ? <VehicleForm vehicle={this.state.vehicle} editVehicle={this.editVehicle} toggleEdit={this.toggle}/> : null}
+        <button onClick={ () => this.toggle()}>
+          {this.state.toggleEdit ? "Close Form" : "Edit"}
+        </button>
+        {/* <button onClick={() => this.state.deleteDrink}>Delete</button> */}
+        
+      </div>
     );
   }
+
 }
 
-export default DrinkForm;
+export default VehicleView;
 
